@@ -66,8 +66,8 @@
 
     .loader {
       margin-left: 45%;
-      border: 16px solid #f3f3f3; /* Light grey */
-      border-top: 16px solid #3498db; /* Blue */
+      border: 16px solid #f3f3f3;
+      border-top: 16px solid #3498db;
       border-radius: 50%;
       width: 120px;
       height: 120px;
@@ -85,7 +85,7 @@
 </style>
 
 <div class="maindiv">
-  <h1>weather Geo web app</h1>
+  <h1>My Weather Web App</h1>
 
   {#if loading}
     <div class="loader" />
