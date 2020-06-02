@@ -1,30 +1,135 @@
 <script>
-	export let name;
+  import axios from "axios";
+
+  const openweather_key = "c8706fba81ccb44269c2baa95d7b75e5";
+  const heremap_apikey = 's-1PUSnBx8P8uXElmVQZdHqGcOgvknPjNfM-CnWJw3s';
+
+  let loading = false;
+  
+  let city = "";
+  let temp = "";
+  let humidity = "";
+  let disc = "";
+
+  let mapurl = "";
+  let zoomlevel = 14.5;
+  let incomeData = null;
+
+  const submitHandler = () => {
+      loading = true;
+      console.log(city);
+
+      axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${openweather_key}&units=metric`)
+        .then(data => {
+          loading = false;
+          console.log(data.data);
+          incomeData = data.data;
+
+          temp = incomeData.main.temp;
+          humidity = incomeData.main.humidity;
+          disc = incomeData.weather[0].description;
+          console.log(temp + " " + humidity + " " + disc);
+          mapurl = `https://image.maps.ls.hereapi.com/mia/1.6/mapview?apiKey=${heremap_apikey}&c=${incomeData.coord.lat},${incomeData.coord.lon}&w=300&h=420&u=10k`; //set the url to of the map image
+        })
+        .catch(Error => {
+          console.log(Error.response);
+          loading = false;
+          window.alert(Error.response.data.message); 
+          city = "";
+        });
+  };
 </script>
 
-<main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
-
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
+    .data {
+      text-align: center;
+    }
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
+    .maindiv {
+      text-align: center;
+      margin-top: 5%;
+    }
 
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
+    .tabledata {
+      margin-left: 10%;
+    }
+
+    .ulwrpper {
+      width: 50%;
+      text-align: left;
+      margin-left: 38%;
+    }
+
+    .forminput {
+      margin-top: 3%;
+    }
+
+    .loader {
+      margin-left: 45%;
+      border: 16px solid #f3f3f3; /* Light grey */
+      border-top: 16px solid #3498db; /* Blue */
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
 </style>
+
+<div class="maindiv">
+  <h1>weather Geo web app</h1>
+
+  {#if loading}
+    <div class="loader" />
+  {/if}
+
+  <form class="forminput" on:submit|preventDefault={submitHandler}>
+
+    <input bind:value={city} placeholder="Enter your city" />
+
+    <button>Fetch Data</button>
+
+  </form>
+
+  {#if incomeData !== null}
+    <div class="data">
+
+      <div class="ulwrpper">
+
+        <table class="tabledata" style="width:40%">
+
+          <tr>
+            <td>Tempurature :</td>
+            <td>
+              <span>{temp}&deg;</span>
+            </td>
+
+          </tr>
+          <tr>
+
+            <td>Humidity :</td>
+            <td>
+              <span>{humidity}%</span>
+            </td>
+          </tr>
+          <tr>
+
+            <td>weather like :</td>
+            <span>{disc}</span>
+          </tr>
+        </table>
+
+      </div>
+
+      <img src={mapurl} alt="mapImageView" />
+    </div>
+  {/if}
+</div>
