@@ -29,7 +29,7 @@
           humidity = incomeData.main.humidity;
           disc = incomeData.weather[0].description;
           console.log(temp + " " + humidity + " " + disc);
-          mapurl = `https://image.maps.ls.hereapi.com/mia/1.6/mapview?apiKey=${heremap_apikey}&c=${incomeData.coord.lat},${incomeData.coord.lon}&w=300&h=420&u=10k`; //set the url to of the map image
+          mapurl = `https://image.maps.ls.hereapi.com/mia/1.6/mapview?apiKey=${heremap_apikey}&c=${incomeData.coord.lat},${incomeData.coord.lon}&w=300&h=420&u=10k`;
         })
         .catch(Error => {
           console.log(Error.response);
